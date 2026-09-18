@@ -5,12 +5,13 @@
  ************************************************************************/
 int main(void)
 {
-	int client_socket;
-    struct addrinfo hints;
-    struct addrinfo *server_info;
-    char time_string[80];
-    int bytes_received = 0;
-    int result;
+	// Setup Variables
+	int client_socket; // socket for communication
+    struct addrinfo hints; // instructions for getaddrinfo()
+    struct addrinfo *server_info; // info about daytime server
+    char time_string[80]; // "storage" for daytime server response (i.e the echo)
+    int bytes_received = 0; // how much data has been received
+    int result; // what we actually get from the server call
 
     printf("Daytime client\n");
 
@@ -29,9 +30,7 @@ int main(void)
     }
 
     // Create socket
-    client_socket = socket(server_info->ai_family,
-                           server_info->ai_socktype,
-                           server_info->ai_protocol);
+    client_socket = socket(server_info->ai_family, server_info->ai_socktype, server_info->ai_protocol);
 
     if (client_socket == -1)
     {
@@ -41,9 +40,7 @@ int main(void)
     }
 
     // Connect to server
-    if (connect(client_socket,
-                server_info->ai_addr,
-                server_info->ai_addrlen) == -1)
+    if (connect(client_socket, server_info->ai_addr, server_info->ai_addrlen) == -1)
     {
         perror("Error connecting to server");
         freeaddrinfo(server_info);
@@ -59,9 +56,7 @@ int main(void)
     {
         int bytes_read;
 
-        bytes_read = read(client_socket,
-                          time_string + bytes_received,
-                          sizeof(time_string) - 1 - bytes_received);
+        bytes_read = read(client_socket, time_string + bytes_received, sizeof(time_string) - 1 - bytes_received);
 
         if (bytes_read <= 0)
         {
